@@ -56,3 +56,30 @@ urgent: urgentFill
 
 # Age gating
 "above 18": above18
+
+# EEO / identity questions (prefer not to answer)
+aboriginal: __eeo_decline__
+native: __eeo_decline__
+indigenous: __eeo_decline__
+tribe: __eeo_decline__
+"first nations": __eeo_decline__
+"native american": __eeo_decline__
+"native hawaiian": __eeo_decline__
+inuit: __eeo_decline__
+metis: __eeo_decline__
+maori: __eeo_decline__
+aborigine: __eeo_decline__
+ancestral: __eeo_decline__
+"native peoples": __eeo_decline__
+"original people": __eeo_decline__
+"first people": __eeo_decline__
+gender: __eeo_decline__
+race: __eeo_decline__
+disability: __eeo_decline__
+latino: __eeo_decline__
+torres: __eeo_decline__
+"do you identify": __eeo_decline__
+
+# Other special-case radio heuristics (not a yes/no checkbox key)
+"level of education": __education_level__
+experience: __experience__

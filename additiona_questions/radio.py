@@ -1,8 +1,23 @@
-from selenium.webdriver.common.by import By
-import yaml
+from pathlib import Path
 
-with open('alias.yaml', 'r') as file:
-    alias_data = yaml.safe_load(file)
+import yaml
+from selenium.webdriver.common.by import By
+
+with open(Path(__file__).resolve().parent / 'alias.yaml', 'r', encoding='utf-8') as file:
+    alias_data = yaml.safe_load(file) or {}
+
+
+def resolve_keyword(text: str):
+    """
+    Returns the first matching canonical key from alias.yaml by substring match.
+    """
+    if not text:
+        return None
+    t = str(text).lower()
+    for alias, canonical in alias_data.items():
+        if str(alias).lower() in t:
+            return canonical
+    return None
 
 def try_handle_radio(self, question):
     try:
@@ -21,65 +36,25 @@ def try_handle_radio(self, question):
 
         answer = None
 
-        # Try to determine answer using existing logic
-        if 'driver\'s licence' in radio_text or 'driver\'s license' in radio_text:
-            answer = self.get_answer('driversLicence')
-        elif any(keyword in radio_text.lower() for keyword in
-                 [
-                     'Aboriginal', 'native', 'indigenous', 'tribe', 'first nations',
-                     'native american', 'native hawaiian', 'inuit', 'metis', 'maori',
-                     'aborigine', 'ancestral', 'native peoples', 'original people',
-                     'first people', 'gender', 'race', 'disability', 'latino', 'torres',
-                     'do you identify'
-                 ]):
-            negative_keywords = ['prefer', 'decline', 'don\'t', 'specified', 'none', 'no']
-            answer = next((option for option in radio_options if
-                           any(neg_keyword in option[1].lower() for neg_keyword in negative_keywords)), None)
-
-        elif 'assessment' in radio_text:
-            answer = self.get_answer("assessment")
-
-        elif 'clearance' in radio_text:
-            answer = self.get_answer("securityClearance")
-
-        elif 'north korea' in radio_text:
-            answer = self.get_answer('northKorea')
-
-        elif 'previously employ' in radio_text or 'previous employ' in radio_text:
-            answer = self.get_answer('previouslyEmployed')
-
-        elif 'authorized' in radio_text or 'authorised' in radio_text or 'legally' in radio_text:
-            answer = self.get_answer('legallyAuthorized')
-
-        elif any(keyword in radio_text.lower() for keyword in
-                 ['certified', 'certificate', 'cpa', 'chartered accountant', 'qualification']):
-            answer = self.get_answer('certifiedProfessional')
-
-        elif 'urgent' in radio_text:
-            answer = self.get_answer('urgentFill')
-
-        elif 'commut' in radio_text or 'on-site' in radio_text or 'hybrid' in radio_text or 'onsite' in radio_text:
-            answer = self.get_answer('commute')
-
-        elif 'remote' in radio_text:
-            answer = self.get_answer('remote')
-
-        elif 'background check' in radio_text:
-            answer = self.get_answer('backgroundCheck')
-
-        elif 'drug test' in radio_text:
-            answer = self.get_answer('drugTest')
-
-        elif 'currently living' in radio_text or 'currently reside' in radio_text or 'right to live' in radio_text:
-            answer = self.get_answer('residency')
-
-        elif 'level of education' in radio_text:
+        # NEW EDIT: resolve via alias.yaml
+        keyword = resolve_keyword(radio_text)
+        if keyword == "__eeo_decline__":
+            negative_keywords = ['prefer', 'decline', "don't", 'specified', 'none', 'no']
+            choice = next(
+                (
+                    opt_text
+                    for _, opt_text in radio_options
+                    if any(neg in opt_text.lower() for neg in negative_keywords)
+                ),
+                None
+            )
+            answer = choice
+        elif keyword == "__education_level__":
             for degree in self.checkboxes['degreeCompleted']:
                 if degree.lower() in radio_text:
                     answer = "yes"
                     break
-
-        elif 'experience' in radio_text:
+        elif keyword == "__experience__":
             if self.experience_default > 0:
                 answer = 'yes'
             else:
@@ -87,12 +62,8 @@ def try_handle_radio(self, question):
                     if experience.lower() in radio_text:
                         answer = "yes"
                         break
-
-        elif 'data retention' in radio_text:
-            answer = self.get_answer('dataRetention')
-
-        elif 'sponsor' in radio_text:
-            answer = self.get_answer('requireVisa')
+        elif keyword is not None:
+            answer = self.get_answer(keyword)
 
         to_select = None
         if answer is not None:
