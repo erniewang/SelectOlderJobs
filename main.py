@@ -114,6 +114,10 @@ def validate_yaml():
     assert isinstance(checkboxes['commute'], bool)
     assert isinstance(checkboxes['backgroundCheck'], bool)
     assert isinstance(checkboxes['securityClearance'], bool)
+    assert isinstance(checkboxes['northKorea'], bool)
+    assert isinstance(checkboxes['previouslyEmployed'], bool)
+    assert isinstance(checkboxes['dataRetention'], bool)
+    assert isinstance(checkboxes['above18'], bool)
     assert 'degreeCompleted' in checkboxes
     assert isinstance(parameters['universityGpa'], (int, float))
 

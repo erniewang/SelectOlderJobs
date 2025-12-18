@@ -45,7 +45,7 @@ date:
 # Remove hash sign to add positions. You can add as many as you need,
 # but preserve formatting
 positions:
- - software engineer
+ - fullstack engineer
 # - Machine Learning Engineer
 # - AI Engineer
 
@@ -147,6 +147,11 @@ checkboxes:
  assessment: True
  # Do you have security clearance of [xxx] country? (yes/no checkbox)
  securityClearance: False
+ # Some LinkedIn “extra questions” we treat as yes/no via the same get_answer() path
+ northKorea: False
+ previouslyEmployed: False
+ dataRetention: False
+ above18: True
  # Have you completed the following level of education: DEGREE TYPE? Remove
  # applicable # signs (yes/no checkbox)
  degreeCompleted:
@@ -249,6 +254,7 @@ experience:
  FP&A: 0
  PQE: 0
  Training & Development: 0
+ # stuff i add
  Python: 3
  JavaScript: 3
  TypeScript: 2
@@ -287,10 +293,3 @@ eeo:
  disability: None
  citizenship: yes
  clearance: no
-
-# --- additional parameters --- (taken from the hardcoded code) ---------
-additionalParameters:
-  northKorea: "no"
-  previouslyEmployed: "no"
-  dataRetention: "no"
-  above18: "yes"

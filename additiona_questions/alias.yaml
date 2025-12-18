@@ -1,0 +1,58 @@
+# Keyword (substring) -> canonical answer/config key
+# These keywords come from hardcoded checks in:
+# - additiona_questions/radio.py
+# - additiona_questions/dropdown.py
+
+# Work authorization
+authorized: legallyAuthorized
+authorised: legallyAuthorized
+legally: legallyAuthorized
+citizenship: legallyAuthorized
+
+# Driver's license
+"driver's licence": driversLicence
+"driver's license": driversLicence
+
+# Assessments / screenings
+assessment: assessment
+clearance: securityClearance
+"background check": backgroundCheck
+"drug test": drugTest
+
+# Location / work mode
+commut: commute
+"on-site": commute
+hybrid: commute
+onsite: commute
+remote: remote
+
+# Residency / right to work
+"currently living": residency
+"currently reside": residency
+"right to live": residency
+
+# Visa / sponsorship
+sponsor: requireVisa
+
+# Country restrictions
+"north korea": northKorea
+
+# Prior employment
+"previously employ": previouslyEmployed
+"previous employ": previouslyEmployed
+"previously employed": previouslyEmployed
+"previous employment": previouslyEmployed
+
+# Professional certifications
+certified: certifiedProfessional
+certificate: certifiedProfessional
+cpa: certifiedProfessional
+"chartered accountant": certifiedProfessional
+qualification: certifiedProfessional
+
+# Misc
+urgent: urgentFill
+"data retention": dataRetention
+
+# Age gating
+"above 18": above18

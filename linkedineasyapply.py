@@ -13,7 +13,7 @@ from pypdf import PdfReader
 from openai import OpenAI
 
 # Split-out helper for additional questions logic (kept in its own module)
-from additional import questions
+from refactor_additiona import questions
 
 class AIResponseGenerator:
     def __init__(self, api_key, personal_info, experience, languages, resume_path, text_resume_path=None, debug=False):
@@ -217,8 +217,6 @@ class LinkedinEasyApply:
         else:
             self.cover_letter_dir = ''
         self.checkboxes = parameters.get('checkboxes', [])
-        # Optional config-driven overrides for specific yes/no questions.
-        self.additionalParameters = parameters.get('additionalParameters', {}) or {}
         self.university_gpa = parameters['universityGpa']
         self.salary_minimum = parameters['salaryMinimum']
         self.notice_period = int(parameters['noticePeriod'])
@@ -647,10 +645,26 @@ class LinkedinEasyApply:
             pass
 
     def get_answer(self, question):
-        if self.checkboxes[question]:
-            return 'yes'
-        else:
-            return 'no'
+        """
+        Unified yes/no getter.
+
+        Order of precedence:
+        1) `self.checkboxes[question]` (config.yaml → checkboxes)
+
+        Returns: "yes" or "no"
+        """
+        # Checkboxes (bool or "yes"/"no" string)
+        try:
+            val = self.checkboxes[question]
+            if isinstance(val, bool):
+                return "yes" if val else "no"
+            if isinstance(val, str):
+                v = val.strip().lower()
+                if v in ["yes", "no"]:
+                    return v
+        except Exception:
+            pass
+        return 'no'
 
     def additional_questions(self, form):
         # Delegate to extracted module to keep this file manageable.
